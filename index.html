@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>KMS Audit 2026 – Monné Zorg &amp; Beweging</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --ink:#1f2933; --muted:#5f6b7a; --line:#dde2e8; --accent:#1f3864; --accent2:#2e75b6; --hl:#fff1a8; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#14181d; --card:#1c2128; --ink:#e6e9ed; --muted:#9aa5b1; --line:#2d343c; --accent:#8fb3e8; --accent2:#6ea8e0; --hl:#5a4b00; } }
+  * { box-sizing:border-box; }
+  body { margin:0; font:15px/1.55 Arial, Helvetica, sans-serif; color:var(--ink); background:var(--bg); }
+  a { color:var(--accent2); }
+  #login { max-width:360px; margin:12vh auto; background:var(--card); border:1px solid var(--line); border-radius:10px; padding:28px; }
+  #login h1 { font-size:20px; margin:0 0 4px; color:var(--accent); }
+  #login p { color:var(--muted); margin:0 0 18px; font-size:13px; }
+  #login label { display:block; font-size:13px; margin:10px 0 4px; }
+  #login input { width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:6px; font:inherit; background:var(--bg); color:var(--ink); }
+  #login button { margin-top:16px; width:100%; padding:10px; border:0; border-radius:6px; background:var(--accent); color:#fff; font:inherit; font-weight:bold; cursor:pointer; }
+  #err { color:#c0392b; font-size:13px; min-height:18px; margin-top:8px; }
+  #app { display:none; min-height:100vh; }
+  header { display:flex; align-items:center; gap:14px; padding:10px 18px; background:var(--accent); color:#fff; position:sticky; top:0; z-index:5; }
+  @media (prefers-color-scheme: dark) { header { background:#22324d; } }
+  header b { font-size:16px; white-space:nowrap; }
+  header input { flex:1; max-width:520px; padding:7px 10px; border-radius:6px; border:0; font:inherit; }
+  header .who { margin-left:auto; font-size:13px; white-space:nowrap; }
+  header button { background:transparent; color:#fff; border:1px solid rgba(255,255,255,.5); border-radius:5px; padding:4px 10px; cursor:pointer; font:inherit; font-size:13px; }
+  .wrap { display:flex; }
+  nav { width:300px; flex:none; padding:16px; border-right:1px solid var(--line); height:calc(100vh - 52px); overflow:auto; position:sticky; top:52px; }
+  nav h3 { font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--muted); margin:16px 0 6px; }
+  nav a { display:block; padding:5px 8px; border-radius:5px; text-decoration:none; color:var(--ink); font-size:14px; }
+  nav a.active, nav a:hover { background:var(--card); color:var(--accent); }
+  main { flex:1; min-width:0; padding:22px 32px 60px; }
+  article { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:24px 32px; max-width:1050px; }
+  article h1 { font-size:24px; color:var(--accent); margin-top:0; }
+  article h2 { font-size:19px; border-bottom:1px solid var(--line); padding-bottom:4px; margin-top:28px; }
+  article h3 { font-size:16px; }
+  table { border-collapse:collapse; width:100%; margin:12px 0; font-size:14px; display:block; overflow-x:auto; }
+  th, td { border:1px solid var(--line); padding:6px 9px; text-align:left; vertical-align:top; }
+  th { background:var(--bg); }
+  mark { background:var(--hl); color:inherit; }
+  .meta { color:var(--muted); font-size:12px; margin-top:10px; }
+  .res { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px 16px; margin-bottom:10px; max-width:1050px; }
+  .res a { font-weight:bold; text-decoration:none; }
+  .res .sec { color:var(--muted); font-size:12px; }
+  .res p { margin:6px 0 0; font-size:14px; }
+  #menu { display:none; }
+  @media (max-width: 800px) {
+    nav { display:none; position:fixed; top:52px; left:0; bottom:0; background:var(--bg); z-index:4; width:85vw; }
+    nav.open { display:block; }
+    #menu { display:inline-block; }
+    main { padding:14px; } article { padding:16px; }
+    header b span { display:none; }
+  }
+</style>
+</head>
+<body>
+<form id="login" autocomplete="on">
+  <h1>KMS Audit 2026</h1>
+  <p>Monné Zorg &amp; Beweging – besloten documenten</p>
+  <label for="u">Inlognaam</label><input id="u" name="username" autocomplete="username" required>
+  <label for="p">Wachtwoord</label><input id="p" name="password" type="password" autocomplete="current-password" required>
+  <button type="submit">Inloggen</button>
+  <div id="err"></div>
+</form>
+<div id="app">
+  <header>
+    <button id="menu" type="button">☰</button>
+    <b>KMS Audit 2026 <span>– Monné Zorg &amp; Beweging</span></b>
+    <input id="q" type="search" placeholder="Zoeken in alle documenten…">
+    <span class="who" id="who"></span>
+    <button id="out" type="button">Uitloggen</button>
+  </header>
+  <div class="wrap"><nav id="nav"></nav><main id="main"></main></div>
+</div>
+<script src="data.js"></script>
+<script>
+const D = window.KMS_DATA, enc = new TextEncoder(), dec = new TextDecoder();
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+let DOCS = [], NAV = [], BUILT = '';
+
+async function sha256hex(s) {
+  const h = await crypto.subtle.digest('SHA-256', enc.encode(s));
+  return [...new Uint8Array(h)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+async function unlock(user, pass) {
+  const entry = D.keys[await sha256hex(user.trim().toLowerCase())];
+  if (!entry) throw new Error('x');
+  const base = await crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveKey']);
+  const k = await crypto.subtle.deriveKey({ name: 'PBKDF2', salt: unb64(entry.salt), iterations: D.iter, hash: 'SHA-256' },
+    base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const raw = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(entry.iv) }, k, unb64(entry.ct));
+  return new Uint8Array(raw);
+}
+async function load(rawKey) {
+  const ck = await crypto.subtle.importKey('raw', rawKey, 'AES-GCM', false, ['decrypt']);
+  const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: unb64(D.payload.iv) }, ck, unb64(D.payload.ct));
+  const b = JSON.parse(dec.decode(pt)); DOCS = b.docs; NAV = b.nav; BUILT = b.built;
+}
+function esc(s) { return s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+function renderNav(active) {
+  document.getElementById('nav').innerHTML = NAV.map(s =>
+    `<h3>${esc(s.section)}</h3>` + s.docs.map(d => `<a href="#/${d.id}" class="${d.id === active ? 'active' : ''}">${esc(d.title)}</a>`).join('')).join('');
+}
+function showDoc(id) {
+  const d = DOCS.find(x => x.id === id) || DOCS[0];
+  renderNav(d.id);
+  document.getElementById('main').innerHTML = `<article>${d.html}<div class="meta">${esc(d.section)} · bijgewerkt ${esc(BUILT)}</div></article>`;
+  document.getElementById('nav').classList.remove('open');
+  window.scrollTo(0, 0);
+}
+function search(q) {
+  const terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+  if (!terms.length) return route();
+  const hits = DOCS.map(d => {
+    const t = d.text.toLowerCase();
+    if (!terms.every(w => t.includes(w)) && !terms.every(w => d.title.toLowerCase().includes(w))) return null;
+    const n = terms.reduce((a, w) => a + t.split(w).length - 1, 0);
+    const i = Math.max(0, t.indexOf(terms[0]) - 90);
+    let snip = esc(d.text.substr(i, 260));
+    for (const w of terms) snip = snip.replace(new RegExp(w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi'), m => `<mark>${m}</mark>`);
+    return { d, n, snip };
+  }).filter(Boolean).sort((a, b) => b.n - a.n);
+  renderNav(null);
+  document.getElementById('main').innerHTML = `<p>${hits.length} document(en) gevonden voor “${esc(q)}”</p>` +
+    hits.map(h => `<div class="res"><a href="#/${h.d.id}">${esc(h.d.title)}</a> <span class="sec">· ${esc(h.d.section)} · ${h.n}×</span><p>…${h.snip}…</p></div>`).join('');
+}
+function route() { const id = (location.hash.match(/^#\/(.+)$/) || [])[1]; showDoc(id); }
+async function start(rawKey, user) {
+  await load(rawKey);
+  document.getElementById('login').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('who').textContent = user;
+  route();
+}
+document.getElementById('login').addEventListener('submit', async e => {
+  e.preventDefault();
+  const u = document.getElementById('u').value, p = document.getElementById('p').value;
+  try {
+    const rk = await unlock(u, p);
+    sessionStorage.setItem('kms', JSON.stringify({ u, k: btoa(String.fromCharCode(...rk)) }));
+    await start(rk, u);
+  } catch { document.getElementById('err').textContent = 'Onjuiste inlognaam of wachtwoord.'; }
+});
+document.getElementById('out').onclick = () => { sessionStorage.removeItem('kms'); location.hash = ''; location.reload(); };
+document.getElementById('menu').onclick = () => document.getElementById('nav').classList.toggle('open');
+let timer; document.getElementById('q').addEventListener('input', e => { clearTimeout(timer); timer = setTimeout(() => search(e.target.value), 200); });
+window.addEventListener('hashchange', () => { document.getElementById('q').value = ''; route(); });
+(async () => { try { const s = JSON.parse(sessionStorage.getItem('kms')); if (s) await start(unb64(s.k), s.u); } catch { sessionStorage.removeItem('kms'); } })();
+</script>
+</body>
+</html>
