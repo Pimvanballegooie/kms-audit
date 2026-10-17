@@ -39,6 +39,8 @@
   th, td { border:1px solid var(--line); padding:6px 9px; text-align:left; vertical-align:top; }
   th { background:var(--bg); }
   mark { background:var(--hl); color:inherit; }
+  td:has(> .ok) { background:#c6efce; color:#006100; font-weight:bold; }
+  @media (prefers-color-scheme: dark) { td:has(> .ok) { background:#1e4d2b; color:#b7f0c4; } }
   .meta { color:var(--muted); font-size:12px; margin-top:10px; }
   .res { background:var(--card); border:1px solid var(--line); border-radius:8px; padding:12px 16px; margin-bottom:10px; max-width:1050px; }
   .res a { font-weight:bold; text-decoration:none; }
